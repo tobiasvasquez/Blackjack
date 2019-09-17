@@ -67,11 +67,11 @@
 
   hitButton.addEventListener('click', function () {
       for (let i = 0; i < cant_jugadores; i++) {
-          if(jugadores_obj[i].firstRound === true){
-            jugadores_obj[i].cartas.push(getNextCard());
-            jugadores_obj[i].firstRound = false;
+          if (jugadores_obj[i].firstRound === true) {
+              jugadores_obj[i].cartas.push(getNextCard());
+              jugadores_obj[i].firstRound = false;
           }
-          
+
           jugadores_obj[i].cartas.push(getNextCard());
       }
       checkForEndOfGame();
@@ -201,7 +201,7 @@
       jugador.cartas.forEach((carta, numero_carta) => {
           suma_cartas += getCardNumericValue(carta)
       });
-      
+
       return suma_cartas;
   }
 
@@ -212,102 +212,113 @@
 
       updateScores();
 
-        //let dealer take cards
-        while(dealerScore < playerScore
-            && playerScore <= 21
-            && dealerScore <= 21){
-              dealerCards.push(getNextCard());
-              updateScores();
-            }     
-      
+      /*      //let dealer take cards
+            while (dealerScore < playerScore &&
+                playerScore <= 21 &&
+                dealerScore <= 21) {
+                dealerCards.push(getNextCard());
+                updateScores();
+            }
+      */
       var ganador_score = 0;
 
       for (i = 0; i < jugadores_obj.length; i++) {
-          // obtener carta para jugador I
+        debugger;  
+        // obtener carta para jugador I
           var suma_cartas = realizarSuma(jugadores_obj[i])
           if (suma_cartas <= 21 && dealerScore < suma_cartas) { // Cartas jugadores iguales o menores a 21 y las cartas del Dealer menores a las del jugador // GANA JUGADOR
               playerWon = true;
               gameOver = true;
+              ganador_score = suma_cartas;
+              ganador = jugadores_obj[i].nombre;
           } else if (suma_cartas > 21) { // Suma de las cartas si se pasa de 21 PIERDE JUGADOR
               playerWon = false;
               gameOver = true;
+
           } else if (dealerScore > 21) { // Suma cartas del dealer, si se pasa del 21 PIERDE DEALER
               playerWon = true;
               gameOver = true;
           } else if (suma_cartas > ganador_score) {
-              ganador_score = suma_cartas
-              if (suma_cartas == ganador_score) {
-                  ganador = "Empate";
-                  gameOver = true;
-              } else {
-                  ganador = jugadores_obj[i].nombre;
-                  
-              }
+              ganador_score = suma_cartas;
+              ganador = suma_cartas;
+              ganador = jugadores_obj[i].nombre;
 
+          } else if (suma_cartas == ganador_score) {
+              ganador = "Empate";
+              gameOver = true;
+          } 
+          
+          if(ganador > dealerScore){
+              playerWon = true;
+              gameOver = true;
           }
-          debugger;  
+          if(dealerScore === ganador){
+              ganador = "Empate entre el dealer y " + ganador;
+          }
+          
+      }
+
+  }
+
+
+  /*
+        for (i = 0; i < cant_jugadores; i++) {
+            // obtener carta para jugador I
+            suma_cartas = realizarSuma(jugadores_obj[i])
+            if (suma_cartas < 21) {
+                if (suma_cartas >= ganador_score) {
+                    ganador_score = suma_cartas
+                    if (suma_cartas == ganador_score) {
+                        ganador = "Empate entre " + ganador + " y " + jugadores_obj[i];
+                    } else {
+                        ganador = jugadores_obj[i].nombre;
+                    }
+
+
+                }
+            }
         }
-        
-    }
-
-/*
-      for (i = 0; i < cant_jugadores; i++) {
-          // obtener carta para jugador I
-          suma_cartas = realizarSuma(jugadores_obj[i])
-          if (suma_cartas < 21) {
-              if (suma_cartas >= ganador_score) {
-                  ganador_score = suma_cartas
-                  if (suma_cartas == ganador_score) {
-                      ganador = "Empate entre " + ganador + " y " + jugadores_obj[i];
-                  } else {
-                      ganador = jugadores_obj[i].nombre;
-                  }
-
-
-              }
-          }
       }
-    }
-*/
-      function showStatus() {
+  */
+  function showStatus() {
 
-          if (!gameStarted) {
-              textArea.innerText = 'Welcome to Blackjack!';
-              return;
-          }
-
-          updateScores();
-
-          textArea.innerText = 'Dealer Has:\n' + dealerCardString + '(Score: ' + dealerScore + ')\n\n';
-
-          //Mostrar que carta tiene cada jugador (falta mostrar la carta)
-          for (let i = 0; i < cant_jugadores; i++) {
-              var whoIs = jugadores_obj[i];
-              textArea.innerText += whoIs.nombre + ' tiene :' + getScore(whoIs.cartas) + '\n\n';
-
-          }
-          if (gameOver) {
-              if (playerWon) {
-                  textArea.innerText += ganador;
-              } else {
-                  textArea.innerText += "DEALER WINS";
-              }
-              newGameButton.style.display = 'inline';
-              hitButton.style.display = 'none';
-              stayButton.style.display = 'none';
-              resetButton.style.display = 'inline';
-              return;
-          }
+      if (!gameStarted) {
+          textArea.innerText = 'Welcome to Blackjack!';
+          return;
       }
 
-      let dealerCardString = '';
-      for (let i = 0; i < dealerCards.length; i++) {
-          dealerCardString += getCardString(dealerCards[i]) + '\n';
+      updateScores();
+
+      textArea.innerText = 'Dealer Has:\n' + dealerCardString + '(Score: ' + dealerScore + ')\n\n';
+
+      //Mostrar que carta tiene cada jugador (falta mostrar la carta)
+      for (let i = 0; i < cant_jugadores; i++) {
+          var whoIs = jugadores_obj[i];
+          textArea.innerText += whoIs.nombre + ' tiene :' + getScore(whoIs.cartas) + '\n\n';
+
       }
+      if (gameOver) {
+          if (playerWon) {
+              textArea.innerText += "Ha ganado el jugador : " + ganador;
+          } else {
+              textArea.innerText += "DEALER WINS";
+          }
+          newGameButton.style.display = 'inline';
+          hitButton.style.display = 'none';
+          stayButton.style.display = 'none';
+          resetButton.style.display = 'inline';
+          return;
+      }
+  }
 
-      let playerCardString = '';
+  let dealerCardString = '';
+  for (let i = 0; i < dealerCards.length; i++) {
+      dealerCardString += getCardString(dealerCards[i]) + '\n';
+  }
 
-     /*for (let i = 0; i < playerCards.length; i++) {
+  let playerCardString = '';
+
+  /*for (let i = 0; i < playerCards.length; i++) {
         playerCardString += getCardString(playerCards[i]) + '\n';
       }
     */
