@@ -57,7 +57,6 @@
       deck = createDeck();
       shuffleDeck(deck)
       dealerCards = [getNextCard(), getNextCard()];
-      playerCards = [getNextCard(), getNextCard()];
 
       newGameButton.style.display = 'none';
       hitButton.style.display = 'inline';
@@ -68,6 +67,11 @@
 
   hitButton.addEventListener('click', function () {
       for (let i = 0; i < cant_jugadores; i++) {
+          if(jugadores_obj[i].firstRound === true){
+            jugadores_obj[i].cartas.push(getNextCard());
+            jugadores_obj[i].firstRound = false;
+          }
+          
           jugadores_obj[i].cartas.push(getNextCard());
       }
       checkForEndOfGame();
@@ -104,10 +108,12 @@
               nombre: nombre,
               cartas: [],
               suma: 0,
+              firstRound: true,
               continuar: true
-              
+
           };
           jugadores_obj.push(object_jugador);
+
 
       }
   }
@@ -190,7 +196,7 @@
   }
 
   function realizarSuma(jugador) {
-   
+
       var suma_cartas = 0;
       jugador.cartas.forEach((carta, numero_carta) => {
           suma_cartas += getCardNumericValue(carta)
@@ -206,9 +212,17 @@
 
       updateScores();
 
+        //let dealer take cards
+        while(dealerScore < playerScore
+            && playerScore <= 21
+            && dealerScore <= 21){
+              dealerCards.push(getNextCard());
+              updateScores();
+            }     
+      
       var ganador_score = 0;
 
-      /*for (i = 0; i < jugadores_obj.length; i++) {
+      for (i = 0; i < jugadores_obj.length; i++) {
           // obtener carta para jugador I
           var suma_cartas = realizarSuma(jugadores_obj[i])
           if (suma_cartas <= 21 && dealerScore < suma_cartas) { // Cartas jugadores iguales o menores a 21 y las cartas del Dealer menores a las del jugador // GANA JUGADOR
@@ -220,18 +234,24 @@
           } else if (dealerScore > 21) { // Suma cartas del dealer, si se pasa del 21 PIERDE DEALER
               playerWon = true;
               gameOver = true;
-          } else if (suma_cartas >= ganador_score) {
+          } else if (suma_cartas > ganador_score) {
               ganador_score = suma_cartas
               if (suma_cartas == ganador_score) {
-                  ganador = "Empate entre " + ganador + " y " + jugadores_obj.nombre;
+                  ganador = "Empate";
+                  gameOver = true;
               } else {
-                  ganador = jugadores_obj[i].nombre
+                  ganador = jugadores_obj[i].nombre;
+                  
               }
 
           }
+          debugger;  
+        }
+        
+    }
 
-*/
-      for (i = 1; i <= cant_jugadores; i++) {
+/*
+      for (i = 0; i < cant_jugadores; i++) {
           // obtener carta para jugador I
           suma_cartas = realizarSuma(jugadores_obj[i])
           if (suma_cartas < 21) {
@@ -248,7 +268,7 @@
           }
       }
     }
-
+*/
       function showStatus() {
 
           if (!gameStarted) {
@@ -287,7 +307,7 @@
 
       let playerCardString = '';
 
-      /*for (let i = 0; i < playerCards.length; i++) {
+     /*for (let i = 0; i < playerCards.length; i++) {
         playerCardString += getCardString(playerCards[i]) + '\n';
       }
-      */
+    */
