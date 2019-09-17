@@ -18,7 +18,7 @@
 
 
   //Cards Variables
-  let suits = ['♠', '♣', '♥', '♦'];
+  let suits = ['Pick', 'Trebol', 'Corazones', 'Diamantes'];
   let values = ['As', 'Rey', 'Reina', 'Jota', 'Diez', 'Nueve', 'Ocho', 'Siete', 'Seis', 'Cinco', 'Cuatro', 'Tres',
       'Dos', 'Uno'
   ];
@@ -34,6 +34,7 @@
 
   let gameStarted = false,
       gameOver = false,
+      dealerDraw = false,
       playerWon = false;
   deck = [];
 
@@ -212,51 +213,44 @@
 
       updateScores();
 
-      /*      //let dealer take cards
-            while (dealerScore < playerScore &&
-                playerScore <= 21 &&
-                dealerScore <= 21) {
-                dealerCards.push(getNextCard());
-                updateScores();
-            }
-      */
       var ganador_score = 0;
 
       for (i = 0; i < jugadores_obj.length; i++) {
-        debugger;  
-        // obtener carta para jugador I
-          var suma_cartas = realizarSuma(jugadores_obj[i])
-          if (suma_cartas <= 21 && dealerScore < suma_cartas) { // Cartas jugadores iguales o menores a 21 y las cartas del Dealer menores a las del jugador // GANA JUGADOR
-              playerWon = true;
-              gameOver = true;
-              ganador_score = suma_cartas;
-              ganador = jugadores_obj[i].nombre;
-          } else if (suma_cartas > 21) { // Suma de las cartas si se pasa de 21 PIERDE JUGADOR
-              playerWon = false;
-              gameOver = true;
-
-          } else if (dealerScore > 21) { // Suma cartas del dealer, si se pasa del 21 PIERDE DEALER
-              playerWon = true;
-              gameOver = true;
+          // obtener carta para jugador I
+          var suma_cartas = getScore(jugadores_obj[i].cartas)
+          if (suma_cartas > 21) { // Suma de las cartas si se pasa de 21 PIERDE JUGADOR
+              continue;
           } else if (suma_cartas > ganador_score) {
               ganador_score = suma_cartas;
-              ganador = suma_cartas;
               ganador = jugadores_obj[i].nombre;
 
           } else if (suma_cartas == ganador_score) {
               ganador = "Empate";
-              gameOver = true;
-          } 
-          
-          if(ganador > dealerScore){
+              ganador_score = suma_cartas;
+          }
+      }
+
+      if (dealerScore <= 21) {
+
+          if (ganador_score > dealerScore) {
               playerWon = true;
               gameOver = true;
-          }
-          if(dealerScore === ganador){
+          } else if (dealerScore === ganador_score) {
               ganador = "Empate entre el dealer y " + ganador;
+              gameOver = true;
+              dealerDraw = true;
+          } else {
+              ganador = 'Gano el dealer';
+              playerWon = false;
+              gameOver = true;
           }
-          
+      } else {
+          playerWon = true;
+          gameOver = true;
       }
+
+
+
 
   }
 
@@ -294,14 +288,22 @@
       //Mostrar que carta tiene cada jugador (falta mostrar la carta)
       for (let i = 0; i < cant_jugadores; i++) {
           var whoIs = jugadores_obj[i];
-          textArea.innerText += whoIs.nombre + ' tiene :' + getScore(whoIs.cartas) + '\n\n';
+          textArea.innerText += '\n' + whoIs.nombre + ' tiene :' + getScore(whoIs.cartas) + '\n\n';
+          if (whoIs.cartas) {
+              for (let ic = 0; ic < whoIs.cartas.length; ic++) {
+                  textArea.innerText += "Cartas " + ic + ": " + whoIs.cartas[ic].value + " de " + whoIs.cartas[ic].suit + "\n";
+              }
+          }
+
 
       }
       if (gameOver) {
           if (playerWon) {
-              textArea.innerText += "Ha ganado el jugador : " + ganador;
+              textArea.innerText += '\n\n' + "Ha ganado el jugador : " + ganador;
+          } else if (dealerDraw) {
+              textArea.innerText +=  '\n\n' + 'Empate entre ' + ganador;
           } else {
-              textArea.innerText += "DEALER WINS";
+              textArea.innerText +=  '\n\n' + "DEALER WINS";
           }
           newGameButton.style.display = 'inline';
           hitButton.style.display = 'none';
