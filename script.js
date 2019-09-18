@@ -282,7 +282,13 @@
 
       updateScores();
 
-      textArea.innerHTML = '<div class="dealer"> <strong>Dealer Has: &nbsp;</strong>' + dealerCardString + ' (Score: ' + dealerScore + ')</div>';
+      let dealerCards_HTML = "<div class='dealer'>";
+      textArea.innerHTML = '<strong>Dealer Has: &nbsp;</strong>' + ' (Score: ' + dealerScore + ')';
+      for (let ic = 0; ic < dealerCards.length; ic++) {
+          dealerCards_HTML += "<img src='img/" + dealerCards[ic].value + "_" + dealerCards[ic].suit + ".png' class='cards'>";
+      }
+      dealerCards_HTML += '</div>';
+      textArea.innerHTML += dealerCards_HTML;
 
       //Mostrar que carta tiene cada jugador (falta mostrar la carta)
       let jugadores_HTML = '<div class="jugadores">';
@@ -292,11 +298,12 @@
           if (whoIs.cartas) {
               jugador_HTML += "<br>";
               for (let ic = 0; ic < whoIs.cartas.length; ic++) {
+
                   jugador_HTML += "<img src='img/" + whoIs.cartas[ic].value + "_" + whoIs.cartas[ic].suit + ".png' class='cards'>";
               }
           }
           jugador_HTML += '</div>';
-         jugadores_HTML += jugador_HTML;
+          jugadores_HTML += jugador_HTML;
 
       }
       jugadores_HTML += '</div>';
@@ -321,9 +328,9 @@
       }
   }
 
-  let dealerCardString = '';
+  /*let dealerCardString = '';
   for (let i = 0; i < dealerCards.length; i++) {
-      dealerCardString += getCardString(dealerCards[i]) + '<br>';
+
   }
 
   let playerCardString = '';
