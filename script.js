@@ -88,7 +88,6 @@
       resetScores();
       startGame();
       updateScores();
-      showStatus();
       deck = createDeck();
       shuffleDeck(deck);
   })
