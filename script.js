@@ -20,7 +20,7 @@
   //Cards Variables
   let suits = ['Pick', 'Trebol', 'Corazones', 'Diamantes'];
   let values = ['As', 'Rey', 'Reina', 'Jota', 'Diez', 'Nueve', 'Ocho', 'Siete', 'Seis', 'Cinco', 'Cuatro', 'Tres',
-      'Dos', 'Uno'
+      'Dos'
   ];
 
   //Dom Variables  
@@ -276,34 +276,43 @@
   function showStatus() {
 
       if (!gameStarted) {
-          textArea.innerText = 'Welcome to Blackjack!';
+          textArea.innerHTML = 'Welcome to Blackjack!';
           return;
       }
 
       updateScores();
 
-      textArea.innerText = 'Dealer Has:\n' + dealerCardString + '(Score: ' + dealerScore + ')\n\n';
+      textArea.innerHTML = '<div class="dealer"> <strong>Dealer Has: &nbsp;</strong>' + dealerCardString + ' (Score: ' + dealerScore + ')</div>';
 
       //Mostrar que carta tiene cada jugador (falta mostrar la carta)
+      let jugadores_HTML = '<div class="jugadores">';
       for (let i = 0; i < cant_jugadores; i++) {
           var whoIs = jugadores_obj[i];
-          textArea.innerText += '\n' + whoIs.nombre + ' tiene :' + getScore(whoIs.cartas) + '\n\n';
+          let jugador_HTML = '<div class="player"> <strong>' + whoIs.nombre + ' </strong> puntos ' + getScore(whoIs.cartas) + '<br>';
           if (whoIs.cartas) {
+              jugador_HTML += "<br>";
               for (let ic = 0; ic < whoIs.cartas.length; ic++) {
-                  textArea.innerText += "Cartas " + ic + ": " + whoIs.cartas[ic].value + " de " + whoIs.cartas[ic].suit + "\n";
+                  jugador_HTML += "<img src='img/" + whoIs.cartas[ic].value + "_" + whoIs.cartas[ic].suit + ".png' class='cards'>";
               }
           }
-
+          jugador_HTML += '</div>';
+         jugadores_HTML += jugador_HTML;
 
       }
+      jugadores_HTML += '</div>';
+      textArea.innerHTML += jugadores_HTML;
+
       if (gameOver) {
+          let resultado_HTML = '<div class="result">';
           if (playerWon) {
-              textArea.innerText += '\n\n' + "Ha ganado el jugador : " + ganador;
+              resultado_HTML += "Ha ganado el jugador : " + ganador;
           } else if (dealerDraw) {
-              textArea.innerText +=  '\n\n' + 'Empate entre ' + ganador;
+              resultado_HTML += 'Empate entre ' + ganador;
           } else {
-              textArea.innerText +=  '\n\n' + "DEALER WINS";
+              resultado_HTML += "DEALER WINS";
           }
+          resultado_HTML += '</div>';
+          textArea.innerHTML += resultado_HTML;
           newGameButton.style.display = 'inline';
           hitButton.style.display = 'none';
           stayButton.style.display = 'none';
@@ -314,7 +323,7 @@
 
   let dealerCardString = '';
   for (let i = 0; i < dealerCards.length; i++) {
-      dealerCardString += getCardString(dealerCards[i]) + '\n';
+      dealerCardString += getCardString(dealerCards[i]) + '<br>';
   }
 
   let playerCardString = '';
