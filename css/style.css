@@ -56,11 +56,23 @@ button {
     justify-content: center;
     margin-bottom: 50px;
 }
+strong:nth-child(1){
+    margin-left: 34%;
+}
+span{
+    margin-right: 26%;
+}
 .player{
     margin-bottom: 50px;
     width: 250px;
     flex-direction: column;
     justify-content: center;
+}
+.player strong{
+    margin: 0;
+}
+.dealer strong{
+    margin: 0;
 }
 .jugadores{
     display: flex;

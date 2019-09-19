@@ -79,14 +79,16 @@
       showStatus();
   });
   stayButton.addEventListener('click', function () {
-      showStatus();
       checkForEndOfGame();
+      showStatus();
       gameOver = true;
       resetButton.style.display = 'inline';
+      newGameButton.style.display = 'none';
+      hitButton.style.display = 'none';
+      stayButton.style.display = 'none';
   });
   resetButton.addEventListener('click', function () {
       resetScores();
-      startGame();
       updateScores();
       deck = createDeck();
       shuffleDeck(deck);
@@ -247,32 +249,8 @@
           playerWon = true;
           gameOver = true;
       }
-
-
-
-
+      debugger;
   }
-
-
-  /*
-        for (i = 0; i < cant_jugadores; i++) {
-            // obtener carta para jugador I
-            suma_cartas = realizarSuma(jugadores_obj[i])
-            if (suma_cartas < 21) {
-                if (suma_cartas >= ganador_score) {
-                    ganador_score = suma_cartas
-                    if (suma_cartas == ganador_score) {
-                        ganador = "Empate entre " + ganador + " y " + jugadores_obj[i];
-                    } else {
-                        ganador = jugadores_obj[i].nombre;
-                    }
-
-
-                }
-            }
-        }
-      }
-  */
   function showStatus() {
 
       if (!gameStarted) {
@@ -283,7 +261,7 @@
       updateScores();
 
       let dealerCards_HTML = "<div class='dealer'>";
-      textArea.innerHTML = '<strong>Dealer Has: &nbsp;</strong>' + ' (Score: ' + dealerScore + ')';
+      textArea.innerHTML = '<strong>Dealer Has: &nbsp;</strong>' + ' <span>(Score: ' + dealerScore + ') </span>';
       for (let ic = 0; ic < dealerCards.length; ic++) {
           dealerCards_HTML += "<img src='img/" + dealerCards[ic].value + "_" + dealerCards[ic].suit + ".png' class='cards'>";
       }
@@ -320,7 +298,7 @@
           }
           resultado_HTML += '</div>';
           textArea.innerHTML += resultado_HTML;
-          newGameButton.style.display = 'inline';
+          newGameButton.style.display = 'none';
           hitButton.style.display = 'none';
           stayButton.style.display = 'none';
           resetButton.style.display = 'inline';
